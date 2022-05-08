@@ -3,11 +3,14 @@
 namespace App\Test;
 
 use App\FizzBuzz;
+use Exception;
 use PHPUnit\Framework\TestCase;
 
 
 class FizzBuzzTest extends TestCase
 {
+    private $fizzBuz;
+
     public function template(): array
     {
         return [
@@ -17,6 +20,13 @@ class FizzBuzzTest extends TestCase
         ];
     }
 
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->fizzBuzz = new FizzBuzz();
+    }
+
     /**
      * @dataProvider template
      * @param int $number
@@ -24,8 +34,7 @@ class FizzBuzzTest extends TestCase
      */
     public function testWhenGiveNumberDvisibleByThreeReturnFizz(int $number, string $expectResult): void
     {
-        $fizzBuzz = new FizzBuzz();
-        $result = $fizzBuzz->sayNumber($number);
+        $result = $this->fizzBuzz->sayNumber($number);
 
         $this->assertEquals($expectResult, $result);
     }
@@ -34,8 +43,7 @@ class FizzBuzzTest extends TestCase
     {
         $number = 5;
 
-        $fizzBuzz = new FizzBuzz();
-        $result = $fizzBuzz->sayNumber($number);
+        $result = $this->fizzBuzz->sayNumber($number);
 
         $this->assertEquals('Buzz', $result);
     }
@@ -44,8 +52,7 @@ class FizzBuzzTest extends TestCase
     {
         $number = 15;
 
-        $fizzBuzz = new FizzBuzz();
-        $result = $fizzBuzz->sayNumber($number);
+        $result = $this->fizzBuzz->sayNumber($number);
 
         $this->assertEquals('FizzBuzz', $result);
     }
@@ -54,8 +61,7 @@ class FizzBuzzTest extends TestCase
     {
         $number = 8;
 
-        $fizzBuzz = new FizzBuzz();
-        $result = $fizzBuzz->sayNumber($number);
+        $result = $this->fizzBuzz->sayNumber($number);
 
         $this->assertEquals(8, $result);
     }
@@ -64,8 +70,7 @@ class FizzBuzzTest extends TestCase
     {
         $number = 3;
 
-        $fizzBuzz = new FizzBuzz();
-        $result = $fizzBuzz->sayNumber($number);
+        $result = $this->fizzBuzz->sayNumber($number);
 
         $this->assertIsString($result);
     }
@@ -74,24 +79,29 @@ class FizzBuzzTest extends TestCase
     {
         $number = 2;
 
-        $fizzBuzz = new FizzBuzz();
-        $result = $fizzBuzz->sayNumber($number);
+        $result = $this->fizzBuzz->sayNumber($number);
 
         $this->assertIsInt($result);
     }
 
     public function testTheCountIsZeroIsNobodyTellMeANumber(): void
     {
-        $fizzBuzz = new FizzBuzz();
-        $this->assertEquals(0, $fizzBuzz->tellMeTheCount());
+        $this->assertEquals(0, $this->fizzBuzz->tellMeTheCount());
     }
 
     public function testTheCountIncrement()
     {
-        $fizzBuzz = new FizzBuzz();
-        $fizzBuzz->sayNumber(1);
-        $fizzBuzz->sayNumber(3);
+        $this->fizzBuzz->sayNumber(1);
+        $this->fizzBuzz->sayNumber(3);
 
-        $this->assertEquals(2, $fizzBuzz->tellMeTheCount());
+        $this->assertEquals(2, $this->fizzBuzz->tellMeTheCount());
+    }
+
+    public function testWhenAErrorHappened()
+    {
+        $this->fizzBuzz->sayNumber(1);
+
+        $this->expectException(Exception::class);
+        throw new \Exception('Ha ocurrido un error');
     }
 }
